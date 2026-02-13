@@ -63,10 +63,10 @@ Release 页面：
 
 当前已发布：
 
-- 标签：`v1.1.4-interface`
-- Windows EXE：`https://github.com/lasawang/sdenv-rs-interface-version/releases/download/v1.1.4-interface/sdenv-service-gui.exe`
-- macOS M 系列：`https://github.com/lasawang/sdenv-rs-interface-version/releases/download/v1.1.4-interface/sdenv-service-gui-macos-arm64`
-- macOS M 系列 DMG：发布后可在对应 Release 下载 `sdenv-service-gui-macos-arm64.dmg`
+- 标签：`v1.1.5-interface`
+- Windows EXE：`https://github.com/lasawang/sdenv-rs-interface-version/releases/download/v1.1.5-interface/sdenv-service-gui.exe`
+- macOS M 系列：`https://github.com/lasawang/sdenv-rs-interface-version/releases/download/v1.1.5-interface/sdenv-service-gui-macos-arm64`
+- macOS M 系列 DMG：`https://github.com/lasawang/sdenv-rs-interface-version/releases/download/v1.1.5-interface/sdenv-service-gui-macos-arm64.dmg`
 
 ## 自动构建 Release 资产（Windows + macOS M 系列）
 
