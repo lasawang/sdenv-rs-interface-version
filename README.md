@@ -137,6 +137,173 @@ pm2 save
 
 可配合环境变量（如 `SDENV_PORT`、代理等）做多实例部署。
 
+## 详细使用
+
+### 1. 服务健康检查
+
+服务启动后先确认健康状态：
+
+```bash
+curl http://127.0.0.1:3901/api/health
+```
+
+预期返回：
+
+```json
+{"status":"ok","version":"1.1.5"}
+```
+
+### 2. HTTP API 使用（`POST /api/crack`）
+
+#### 2.1 `remote` 模式（最常用）
+
+服务端自动请求目标 URL，计算 Cookie 并返回结果。
+
+```bash
+curl -X POST http://127.0.0.1:3901/api/crack ^
+  -H "Content-Type: application/json" ^
+  -d "{\"mode\":\"remote\",\"url\":\"https://www.suyinwealth.com/lccs\",\"resourceMode\":\"fast\",\"timeout\":45000,\"verify\":true}"
+```
+
+常用参数：
+
+- `mode`: `remote`
+- `url`: 目标页面
+- `resourceMode`: `fast` 或 `full`
+- `timeout`: 超时毫秒
+- `verify`: 是否二次验证
+- `userAgent`、`proxy`: 可选
+
+返回关键字段：
+
+- `success`: 是否成功
+- `isRS`: 是否检测到瑞数
+- `cookies`: 生成的 Cookie 字符串
+- `event`: 跳转事件信息（可能带 `url`）
+
+#### 2.2 `local` 模式
+
+你自己传 HTML/JS 给服务执行，适合离线调试。
+
+```json
+{
+  "mode": "local",
+  "url": "https://target.example.com/",
+  "html": "<html>...</html>",
+  "js": "/* rs js code */",
+  "ts": {"sign": "xxx"},
+  "timeout": 30000
+}
+```
+
+#### 2.3 `execute` 模式
+
+在模拟浏览器环境中执行自定义 JS。
+
+```json
+{
+  "mode": "execute",
+  "url": "https://target.example.com/",
+  "html": "<html><body></body></html>",
+  "jsCode": "document.title = 'ok'; document.title;",
+  "timeout": 30000
+}
+```
+
+### 3. Python SDK 详细示例
+
+#### 3.1 基础连通
+
+```python
+from sdenv_client import SdenvClient
+
+client = SdenvClient(host='127.0.0.1', port=3901)
+print(client.health())
+```
+
+#### 3.2 直接算 Cookie
+
+```python
+resp = client.crack_url(
+    "https://www.suyinwealth.com/lccs",
+    resource_mode="fast",
+    timeout=45000,
+    verify=True,
+)
+print(resp.get("success"), len(resp.get("cookies", "")))
+```
+
+#### 3.3 计算 Cookie 并发起目标请求（推荐）
+
+```python
+resp = client.request_with_cookie(
+    cookie_url="https://www.suyinwealth.com",
+    request_url="https://www.suyinwealth.com/lccs/loadProductNew?page=2&rows=&prd_type=&status=0&client_groups=&interest_way=&min_money=&max_money=&prd_limit=&fund_risk=",
+    method="GET",
+    resource_mode="fast",
+    timeout=45000,
+    verify=False,
+    use_cookie_cache=True,
+    cookie_cache_ttl=20000,
+    retry_on_cookie_expired=True,
+)
+print(resp.get("success"), resp.get("status_code"), resp.get("cookie_source"))
+```
+
+#### 3.4 POST JSON 示例
+
+```python
+resp = client.request_with_cookie(
+    cookie_url="https://example.com/",
+    request_url="https://example.com/api/demo",
+    method="POST",
+    json_data={"page": 1, "size": 20},
+    headers={"X-Requested-With": "XMLHttpRequest"},
+    use_cookie_cache=True,
+)
+print(resp.get("status_code"))
+```
+
+#### 3.5 Cookie 缓存管理
+
+```python
+print(client.get_cookie_cache_stats())
+client.clear_cookie_cache("https://www.suyinwealth.com")
+```
+
+### 4. CLI 使用
+
+#### 4.1 npm 全局命令
+
+```bash
+sdenv-rs https://www.suyinwealth.com/lccs
+```
+
+#### 4.2 Python 命令行封装
+
+```bash
+python python/call_sdenv.py https://www.suyinwealth.com/ --request-url "https://www.suyinwealth.com/lccs/loadProductNew?page=2&rows=&prd_type=&status=0&client_groups=&interest_way=&min_money=&max_money=&prd_limit=&fund_risk=" --host 127.0.0.1 --port 3901 --show-body
+```
+
+### 5. 常见问题
+
+#### 5.1 端口不一致导致连接失败
+
+- 服务默认端口是 `3000`。
+- 你可以统一使用 `SDENV_PORT=3901` 启动。
+- `python/test_site.py` 已支持端口探测顺序：`SDENV_PORT -> 3901 -> 3000`。
+
+#### 5.2 `node-gyp`/C++ 编译失败
+
+当前版本安装仍需要本机编译环境（如 Windows 的 Visual Studio C++ Build Tools）。
+
+#### 5.3 HTTPS/老旧站点握手报错
+
+项目已内置以下兼容设置（服务端启动自动生效）：
+
+- `NODE_TLS_REJECT_UNAUTHORIZED=0`
+- `OPENSSL_LEGACY_RENEGOTIATION=1`
+
 ## GUI 打包说明
 
 - Windows 打包：`python\build_service_gui_exe.bat`
