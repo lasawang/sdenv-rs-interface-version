@@ -88,7 +88,7 @@ const sdenv = require('sdenv-rs-interface-version');
 适合 Python 服务端/脚本直接调用本项目 API。
 
 ```python
-from sdenv_client import SdenvClient
+from python.sdenv_client import SdenvClient
 
 client = SdenvClient(host='127.0.0.1', port=3901)
 print(client.health())
@@ -112,6 +112,13 @@ python python/test_site.py
 ```
 
 `test_site.py` 会自动探测端口（`SDENV_PORT` -> `3901` -> `3000`）。
+
+说明：
+
+- `sdenv_client` 不是单独发布到 PyPI 的公网包。
+- SDK 源码在 `python/sdenv_client.py`。
+- 推荐导入：`from python.sdenv_client import SdenvClient`。
+- 为兼容旧写法，仓库根目录也提供了 `sdenv_client.py` 入口，可直接 `from sdenv_client import SdenvClient`。
 
 ### 方式 5：使用 Release 可执行文件（免源码启动）
 
@@ -215,7 +222,7 @@ curl -X POST http://127.0.0.1:3901/api/crack ^
 #### 3.1 基础连通
 
 ```python
-from sdenv_client import SdenvClient
+from python.sdenv_client import SdenvClient
 
 client = SdenvClient(host='127.0.0.1', port=3901)
 print(client.health())
