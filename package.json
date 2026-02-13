@@ -1,6 +1,6 @@
 {
   "name": "sdenv-rs-interface-version",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "sdenv ???????????? API ???Python SDK ? GUI ???",
   "directories": {
     "test": "test"

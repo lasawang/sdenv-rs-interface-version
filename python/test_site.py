@@ -1,3 +1,4 @@
+import os
 import time
 from sdenv_client import SdenvClient
 
@@ -12,8 +13,36 @@ SITES = [
     },
 ]
 
-client = SdenvClient(host='127.0.0.1', port=3901)
-print(client.health())
+
+def _pick_client(host='127.0.0.1'):
+    env_port = os.getenv('SDENV_PORT')
+    candidate_ports = []
+    if env_port:
+        try:
+            candidate_ports.append(int(env_port))
+        except ValueError:
+            pass
+    candidate_ports.extend([3901, 3000])
+
+    seen = set()
+    for port in candidate_ports:
+        if port in seen:
+            continue
+        seen.add(port)
+        client = SdenvClient(host=host, port=port)
+        health = client.health()
+        if health.get('status') == 'ok':
+            print(f'using service: {host}:{port}')
+            print(health)
+            return client
+
+    raise RuntimeError(
+        f'Cannot connect sdenv service, tried ports: {sorted(seen)}. '
+        f'Start server first, e.g. `set SDENV_PORT=3901&& node server/index.js`.'
+    )
+
+
+client = _pick_client()
 
 for site in SITES:
     print('---', site['cookie_url'])

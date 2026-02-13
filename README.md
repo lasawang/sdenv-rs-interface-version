@@ -1,41 +1,91 @@
 ﻿# sdenv的瑞数逆向的接口版本
 
-` sdenv的瑞数逆向的接口版本 ` 是在上游 `sdenv` 基础上做的接口化二次开发版本，目标是提供更直接的 API 调用、Python 客户端能力，以及可执行 GUI 启动器。
+`sdenv的瑞数逆向的接口版本` 是基于上游 `sdenv` 的接口化二次开发版本，提供 Node API、Python SDK、GUI 启动器与 npm CLI。
 
 ## 上游来源声明
 
 - 上游项目：`https://github.com/pysunday/sdenv`
 - 当前仓库：`https://github.com/lasawang/sdenv-rs-interface-version`
-- 本项目保留上游许可证与来源说明，详细见 `NOTICE.md` 与 `LICENSE`
+- 本项目保留上游许可证与来源说明，详见 `NOTICE.md` 与 `LICENSE`
 
 ## 主要能力
 
-- `remote`：远程拉取目标页面并计算瑞数 Cookie
-- `local`：传入 HTML/JS/TS 在本地模拟环境中执行
+- `remote`：远程拉取页面并计算瑞数 Cookie
+- `local`：传入 HTML/JS/TS 在本地模拟环境执行
 - `execute`：在模拟浏览器环境中执行自定义 JS
 - Python SDK：支持 GET/POST、短效 Cookie 缓存复用、失效自动刷新重试
-- 资源加速模式：`resource_mode='fast'`，减少非必要资源加载
+- `resource_mode='fast'`：减少非必要资源加载
 
-## 快速开始
+## 部署方式（多种）
 
-### 1. 环境要求
+### 方式 1：源码部署（推荐）
 
+适合你自己维护服务端、二次开发。
+
+1. 准备环境
 - Node.js `>= 20.19.5`
 - Python `>= 3.10`（建议 3.11）
-- 已安装项目依赖：`npm i`
+- 由于 `node-gyp/canvas`，首次安装需要本机 C/C++ 编译环境
 
-### 2. 启动服务
+2. 安装依赖
 
 ```bash
+npm i
+```
+
+3. 启动服务（示例用 3901 端口）
+
+Windows:
+
+```bat
+set SDENV_PORT=3901&& node server/index.js
+```
+
+macOS/Linux:
+
+```bash
+export SDENV_PORT=3901
 node server/index.js
 ```
 
 默认接口：
-
 - `GET /api/health`
 - `POST /api/crack`
 
-### 3. Python 调用示例
+### 方式 2：npm 全局安装（CLI）
+
+适合本机直接命令行调用。
+
+```bash
+npm i -g sdenv-rs-interface-version
+sdenv-rs https://www.example.com
+```
+
+说明：首次安装同样可能需要本机编译环境（`node-gyp/canvas`）。
+
+### 方式 3：npm 作为项目依赖
+
+适合集成到你自己的 Node 项目中。
+
+```bash
+npm i sdenv-rs-interface-version
+```
+
+或直接安装 GitHub 最新源码：
+
+```bash
+npm i git+https://github.com/lasawang/sdenv-rs-interface-version.git
+```
+
+代码中使用：
+
+```js
+const sdenv = require('sdenv-rs-interface-version');
+```
+
+### 方式 4：Python SDK 部署调用
+
+适合 Python 服务端/脚本直接调用本项目 API。
 
 ```python
 from sdenv_client import SdenvClient
@@ -55,32 +105,44 @@ resp = client.request_with_cookie(
 print(resp.get('status_code'), resp.get('cookie_source'))
 ```
 
-## NPM 安装
-
-### 作为依赖安装
+测试脚本：
 
 ```bash
-npm i sdenv-rs-interface-version
+python python/test_site.py
 ```
 
-代码中使用：
+`test_site.py` 会自动探测端口（`SDENV_PORT` -> `3901` -> `3000`）。
 
-```js
-const sdenv = require('sdenv-rs-interface-version');
-```
+### 方式 5：使用 Release 可执行文件（免源码启动）
 
-### 使用 GitHub 源码安装（无需等 npm 发布）
+适合不想手动启动 Node 服务的同学。
+
+Release 页面：
+- `https://github.com/lasawang/sdenv-rs-interface-version/releases`
+
+当前常用资产：
+- Windows：`sdenv-service-gui.exe`
+- macOS Apple Silicon：`sdenv-service-gui-macos-arm64.dmg`
+
+### 方式 6：生产常驻（PM2）
+
+适合线上长期运行。
 
 ```bash
-npm i git+https://github.com/lasawang/sdenv-rs-interface-version.git
+npm i
+npm i -g pm2
+pm2 start server/index.js --name sdenv-rs --update-env
+pm2 save
 ```
 
-### 全局命令（可选）
+可配合环境变量（如 `SDENV_PORT`、代理等）做多实例部署。
 
-```bash
-npm i -g sdenv-rs-interface-version
-sdenv-rs https://www.example.com
-```
+## GUI 打包说明
+
+- Windows 打包：`python\build_service_gui_exe.bat`
+- macOS M 系列打包：`python/build_service_gui_macos.sh`
+
+详细说明见：`python/README-exe.md`
 
 ## 发布到 npm（维护者）
 
@@ -90,65 +152,14 @@ npm run pack:check
 npm publish --access public
 ```
 
-如果提示 token 失效，先重新执行 `npm login` 后再发布。
-
-## GUI 可执行文件（Release）
-
-Release 页面：
-
-- `https://github.com/lasawang/sdenv-rs-interface-version/releases`
-
-当前已发布：
-
-- 标签：`v1.1.5-interface`
-- Windows EXE：`https://github.com/lasawang/sdenv-rs-interface-version/releases/download/v1.1.5-interface/sdenv-service-gui.exe`
-- macOS M 系列 DMG：`https://github.com/lasawang/sdenv-rs-interface-version/releases/download/v1.1.5-interface/sdenv-service-gui-macos-arm64.dmg`
-
-当前 Release 仅保留 macOS 的 `.dmg` 分发包，不提供裸二进制下载。
-
-## 自动构建 Release 资产（Windows + macOS M 系列）
-
-仓库内置工作流：`.github/workflows/release-binaries.yml`
-
-- 触发方式 1：推送标签（如 `v1.1.4-interface`）
-- 触发方式 2：GitHub Actions 手动执行 `Release GUI Binaries`
-- 产物：
-  - `dist/sdenv-service-gui.exe`
-  - `dist/sdenv-service-gui-macos-arm64.dmg`
-
-## 支持 macOS M 系列可执行文件
-
-本项目已提供 Apple Silicon（arm64）打包脚本，可在 M 系列 Mac 本机生成可执行文件：
+若账号开启 2FA：
 
 ```bash
-cd python
-chmod +x build_service_gui_macos.sh
-./build_service_gui_macos.sh
+npm publish --access public --otp=6位验证码或recovery-code
 ```
-
-输出文件：
-
-- `dist/sdenv-service-gui-macos-arm64`（命令行可执行）
-- `dist/sdenv-service-gui-macos-arm64.app`（双击启动）
-- `dist/sdenv-service-gui-macos-arm64.dmg`（分发安装包）
-
-说明：
-
-- macOS 可执行文件需在 macOS（建议 M 系列机器）本机打包，不建议在 Windows 交叉打包。
-- GUI 启动器依赖当前项目目录中的 `server/` 与 `node_modules/`。
-
-## Windows 打包
-
-```bat
-python\build_service_gui_exe.bat
-```
-
-输出文件：
-
-- `dist/sdenv-service-gui.exe`
 
 ## 重要提示
 
 - 本项目仅用于合法授权范围内的安全研究与接口测试。
-- 请遵守目标系统的服务条款与当地法律法规。
+- 请遵守目标系统服务条款与当地法律法规。
 - 任何未授权使用行为与本项目维护者无关。
