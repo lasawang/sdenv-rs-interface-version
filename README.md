@@ -278,6 +278,50 @@ print(client.get_cookie_cache_stats())
 client.clear_cookie_cache("https://www.suyinwealth.com")
 ```
 
+### 3.6 仅下载 EXE 时（不导入 `sdenv_client.py`）
+
+当你只下载 `sdenv-service-gui.exe` 时，Python 侧不能 `import exe`。  
+正确方式是：启动 EXE 后，直接请求本地 HTTP 接口。
+
+#### Python 标准库（零第三方依赖）示例
+
+```python
+import json
+import urllib.request
+
+BASE = "http://127.0.0.1:3900"
+
+def get_health():
+    with urllib.request.urlopen(f"{BASE}/api/health", timeout=5) as resp:
+        return json.loads(resp.read().decode("utf-8"))
+
+def crack_remote(url):
+    payload = {
+        "mode": "remote",
+        "url": url,
+        "resourceMode": "fast",
+        "timeout": 45000,
+        "verify": True,
+    }
+    req = urllib.request.Request(
+        f"{BASE}/api/crack",
+        data=json.dumps(payload).encode("utf-8"),
+        headers={"Content-Type": "application/json; charset=utf-8"},
+        method="POST",
+    )
+    with urllib.request.urlopen(req, timeout=60) as resp:
+        return json.loads(resp.read().decode("utf-8"))
+
+print(get_health())
+result = crack_remote("https://www.suyinwealth.com/lccs")
+print(result.get("success"), result.get("isRS"), len(result.get("cookies", "")))
+```
+
+说明：
+
+- 若 EXE 端口不是 `3900`，把 `BASE` 改成实际端口。
+- 接口固定为：`GET /api/health`、`POST /api/crack`。
+
 ### 4. CLI 使用
 
 #### 4.1 npm 全局命令
