@@ -55,6 +55,43 @@ resp = client.request_with_cookie(
 print(resp.get('status_code'), resp.get('cookie_source'))
 ```
 
+## NPM 安装
+
+### 作为依赖安装
+
+```bash
+npm i sdenv-rs-interface-version
+```
+
+代码中使用：
+
+```js
+const sdenv = require('sdenv-rs-interface-version');
+```
+
+### 使用 GitHub 源码安装（无需等 npm 发布）
+
+```bash
+npm i git+https://github.com/lasawang/sdenv-rs-interface-version.git
+```
+
+### 全局命令（可选）
+
+```bash
+npm i -g sdenv-rs-interface-version
+sdenv-rs https://www.example.com
+```
+
+## 发布到 npm（维护者）
+
+```bash
+npm login
+npm run pack:check
+npm publish --access public
+```
+
+如果提示 token 失效，先重新执行 `npm login` 后再发布。
+
 ## GUI 可执行文件（Release）
 
 Release 页面：

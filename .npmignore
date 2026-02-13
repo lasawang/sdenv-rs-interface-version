@@ -1,8 +1,7 @@
-/*
-!bin/
-!browser/
-!utils/
-!binding.gyp
-!README.md
-!CHANGELOG.md
-!index.js
+﻿node_modules/
+github-upload/
+build/
+dist/
+__pycache__/
+*.pyc
+*.spec
