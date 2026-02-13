@@ -65,8 +65,9 @@ Release 页面：
 
 - 标签：`v1.1.5-interface`
 - Windows EXE：`https://github.com/lasawang/sdenv-rs-interface-version/releases/download/v1.1.5-interface/sdenv-service-gui.exe`
-- macOS M 系列：`https://github.com/lasawang/sdenv-rs-interface-version/releases/download/v1.1.5-interface/sdenv-service-gui-macos-arm64`
 - macOS M 系列 DMG：`https://github.com/lasawang/sdenv-rs-interface-version/releases/download/v1.1.5-interface/sdenv-service-gui-macos-arm64.dmg`
+
+当前 Release 仅保留 macOS 的 `.dmg` 分发包，不提供裸二进制下载。
 
 ## 自动构建 Release 资产（Windows + macOS M 系列）
 
@@ -76,7 +77,6 @@ Release 页面：
 - 触发方式 2：GitHub Actions 手动执行 `Release GUI Binaries`
 - 产物：
   - `dist/sdenv-service-gui.exe`
-  - `dist/sdenv-service-gui-macos-arm64`
   - `dist/sdenv-service-gui-macos-arm64.dmg`
 
 ## 支持 macOS M 系列可执行文件
