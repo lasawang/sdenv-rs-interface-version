@@ -25,10 +25,12 @@
   "logLevel": "debug",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pysunday/sdenv"
+    "url": "https://github.com/lasawang/sdenv-rs-interface-version.git"
   },
-  "homepage": "https://github.com/pysunday/sdenv#readme",
-  "bugs": "https://github.com/pysunday/sdenv/issues",
+  "homepage": "https://github.com/lasawang/sdenv-rs-interface-version#readme",
+  "bugs": {
+    "url": "https://github.com/lasawang/sdenv-rs-interface-version/issues"
+  },
   "author": "pysunday",
   "license": "BSD 3-Clause",
   "bin": {

@@ -21,6 +21,7 @@
 ## 项目说明
 
 - 当前项目名：`sdenv的瑞数逆向的接口版本`
+- 当前开源仓库：`https://github.com/lasawang/sdenv-rs-interface-version`
 - 上游来源：`https://github.com/pysunday/sdenv`
 - 本仓库为接口化改造版本，保留原项目许可证与来源声明
 

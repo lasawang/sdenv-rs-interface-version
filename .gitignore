@@ -18,3 +18,5 @@ __pycache__/
 *.pyc
 *.spec
 dist/
+!dist/
+!dist/sdenv-service-gui.exe
