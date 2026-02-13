@@ -20,3 +20,4 @@ __pycache__/
 dist/
 !dist/
 !dist/sdenv-service-gui.exe
+!dist/sdenv-service-gui-macos-arm64
