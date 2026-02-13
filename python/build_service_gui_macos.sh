@@ -3,6 +3,9 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BUILD_ROOT="${TMPDIR:-/tmp}/sdenv_pyinstaller_macos"
+APP_NAME="sdenv-service-gui-macos-arm64"
+APP_BUNDLE="${APP_NAME}.app"
+DMG_NAME="${APP_NAME}.dmg"
 
 cd "$ROOT_DIR"
 
@@ -25,26 +28,45 @@ if ! command -v pyinstaller >/dev/null 2>&1; then
   exit 1
 fi
 
-echo "[3/4] Build macOS arm64 executable..."
+echo "[3/4] Build macOS arm64 executable and app bundle..."
 rm -rf "$BUILD_ROOT"
 mkdir -p "$BUILD_ROOT/spec" "$BUILD_ROOT/build" "$BUILD_ROOT/dist"
 cp -f "python/sdenv_service_gui.py" "$BUILD_ROOT/sdenv_service_gui.py"
 
-pyinstaller --noconfirm --clean --onefile --windowed --name sdenv-service-gui-macos-arm64 \
+pyinstaller --noconfirm --clean --windowed --name "$APP_NAME" \
   --specpath "$BUILD_ROOT/spec" \
   --workpath "$BUILD_ROOT/build" \
   --distpath "$BUILD_ROOT/dist" \
   "$BUILD_ROOT/sdenv_service_gui.py"
 
 mkdir -p "$ROOT_DIR/dist"
-cp -f "$BUILD_ROOT/dist/sdenv-service-gui-macos-arm64" "$ROOT_DIR/dist/sdenv-service-gui-macos-arm64"
-chmod +x "$ROOT_DIR/dist/sdenv-service-gui-macos-arm64"
+if [[ ! -d "$BUILD_ROOT/dist/$APP_BUNDLE" ]]; then
+  echo "Build output $BUILD_ROOT/dist/$APP_BUNDLE not found."
+  exit 1
+fi
+
+rm -rf "$ROOT_DIR/dist/$APP_BUNDLE"
+cp -R "$BUILD_ROOT/dist/$APP_BUNDLE" "$ROOT_DIR/dist/$APP_BUNDLE"
+
+# Extract launcher binary for CLI usage
+cp -f "$ROOT_DIR/dist/$APP_BUNDLE/Contents/MacOS/$APP_NAME" "$ROOT_DIR/dist/$APP_NAME"
+chmod +x "$ROOT_DIR/dist/$APP_NAME"
+
+# Build DMG containing the .app bundle
+rm -f "$ROOT_DIR/dist/$DMG_NAME"
+hdiutil create \
+  -volname "$APP_NAME" \
+  -srcfolder "$ROOT_DIR/dist/$APP_BUNDLE" \
+  -ov \
+  -format UDZO \
+  "$ROOT_DIR/dist/$DMG_NAME"
 
 echo "[4/4] Done."
-echo "Binary: $ROOT_DIR/dist/sdenv-service-gui-macos-arm64"
+echo "Binary: $ROOT_DIR/dist/$APP_NAME"
+echo "App: $ROOT_DIR/dist/$APP_BUNDLE"
+echo "DMG: $ROOT_DIR/dist/$DMG_NAME"
 echo
 echo "Usage:"
-echo "1. Run: ./dist/sdenv-service-gui-macos-arm64"
+echo "1. Double click dist/$APP_BUNDLE or mount dist/$DMG_NAME."
 echo "2. Service auto-starts on app launch (or click Start Service)."
 echo "3. Call API from python/sdenv_client.py with the shown host/port."
-

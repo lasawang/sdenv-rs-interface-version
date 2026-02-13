@@ -66,6 +66,7 @@ Release 页面：
 - 标签：`v1.1.4-interface`
 - Windows EXE：`https://github.com/lasawang/sdenv-rs-interface-version/releases/download/v1.1.4-interface/sdenv-service-gui.exe`
 - macOS M 系列：`https://github.com/lasawang/sdenv-rs-interface-version/releases/download/v1.1.4-interface/sdenv-service-gui-macos-arm64`
+- macOS M 系列 DMG：发布后可在对应 Release 下载 `sdenv-service-gui-macos-arm64.dmg`
 
 ## 自动构建 Release 资产（Windows + macOS M 系列）
 
@@ -76,6 +77,7 @@ Release 页面：
 - 产物：
   - `dist/sdenv-service-gui.exe`
   - `dist/sdenv-service-gui-macos-arm64`
+  - `dist/sdenv-service-gui-macos-arm64.dmg`
 
 ## 支持 macOS M 系列可执行文件
 
@@ -89,7 +91,9 @@ chmod +x build_service_gui_macos.sh
 
 输出文件：
 
-- `dist/sdenv-service-gui-macos-arm64`
+- `dist/sdenv-service-gui-macos-arm64`（命令行可执行）
+- `dist/sdenv-service-gui-macos-arm64.app`（双击启动）
+- `dist/sdenv-service-gui-macos-arm64.dmg`（分发安装包）
 
 说明：
 

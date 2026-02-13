@@ -57,7 +57,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: sdenv-service-gui-macos-arm64
-          path: dist/sdenv-service-gui-macos-arm64
+          path: |
+            dist/sdenv-service-gui-macos-arm64
+            dist/sdenv-service-gui-macos-arm64.dmg
           if-no-files-found: error
 
   release:
@@ -84,3 +86,4 @@ jobs:
           files: |
             dist/sdenv-service-gui.exe
             dist/sdenv-service-gui-macos-arm64
+            dist/sdenv-service-gui-macos-arm64.dmg

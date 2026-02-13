@@ -42,7 +42,9 @@ chmod +x build_service_gui_macos.sh
 
 输出：
 
-- `dist/sdenv-service-gui-macos-arm64`
+- `dist/sdenv-service-gui-macos-arm64`（命令行可执行）
+- `dist/sdenv-service-gui-macos-arm64.app`（双击启动）
+- `dist/sdenv-service-gui-macos-arm64.dmg`（分发安装包）
 
 ## 使用
 
