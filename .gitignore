@@ -14,3 +14,7 @@ yarn.lock
 build/
 *.node
 Dockerfile
+__pycache__/
+*.pyc
+*.spec
+dist/

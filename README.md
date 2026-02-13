@@ -13,10 +13,16 @@
 
 <h1 align="center">
     <img width="100" height="100" src="./logo.png" alt=""><br>
-    sdenv
+    sdenv的瑞数逆向的接口版本
 </h1>
 
 [![NPM version](https://badge.fury.io/js/sdenv.svg)](http://badge.fury.io/js/sdenv)
+
+## 项目说明
+
+- 当前项目名：`sdenv的瑞数逆向的接口版本`
+- 上游来源：`https://github.com/pysunday/sdenv`
+- 本仓库为接口化改造版本，保留原项目许可证与来源声明
 
 sdenv是一个javascript运行时补环境框架，与github上其它补环境框架存在较大区别，sdenv是站在巨人的肩膀上实现的，依赖于jsdom的强大dom仿真能力，sdenv可以真实模拟浏览器执行环境，作者在固定随机数与添加[sdenv-extend](https://github.com/pysunday/sdenv-extend)的部分插件后可以达到**瑞数vmp代码在sdenv运行生成的cookie值与浏览器生成的cookie值一致**。
 
