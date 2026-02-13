@@ -1,7 +1,7 @@
 {
   "name": "sdenv-rs-interface-version",
   "version": "1.1.4",
-  "description": "sdenv ???????????? API ???Python SDK ? GUI ???",
+  "description": "sdenv的瑞数逆向接口版本，提供 Node API、Python SDK 与 GUI 启动器",
   "directories": {
     "test": "test"
   },
@@ -68,7 +68,7 @@
     "@bin": "./bin",
     "@jsdom": "sdenv-jsdom/lib/jsdom/"
   },
-  "displayName": "sdenv??????????",
+  "displayName": "sdenv的瑞数逆向接口版本",
   "source": {
     "upstream": "https://github.com/pysunday/sdenv",
     "note": "This project is derived from the upstream repository and contains interface-oriented modifications."
