@@ -15,13 +15,43 @@
 
 ## 快速开始
 
-### 1. 环境要求
+### 1. EXE 无脑使用（推荐）
+
+只想直接用，不想配 Node / C++ 编译环境，按这个流程即可：
+
+1. 到 Release 下载并启动：
+- `sdenv-service-gui.exe`（Windows）
+- `sdenv-service-gui-macos-arm64.dmg`（macOS Apple Silicon）
+
+2. 默认监听端口 `3900`（可在 GUI 中改端口）
+
+3. 健康检查：
+
+```bash
+curl http://127.0.0.1:3900/api/health
+```
+
+4. Python 直接请求（`requests`）：
+
+```python
+import requests
+
+BASE = "http://127.0.0.1:3900"
+health = requests.get(f"{BASE}/api/health", timeout=5).json()
+print("health:", health)
+```
+
+Release 页面：
+
+- `https://github.com/lasawang/sdenv-rs-interface-version/releases`
+
+### 2. 源码部署环境要求
 
 - Node.js `>= 20.19.5`
 - Python `>= 3.10`
 - 首次安装依赖时需要本机 C/C++ 编译环境（`node-gyp/canvas`）
 
-### 2. 源码部署
+### 3. 源码部署
 
 ```bash
 npm i
@@ -46,7 +76,7 @@ node server/index.js
 curl http://127.0.0.1:3901/api/health
 ```
 
-### 3. EXE 部署
+### 4. EXE 部署
 
 从 Release 下载并启动：
 
