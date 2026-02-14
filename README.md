@@ -237,6 +237,13 @@ python python/test_site.py
 
 `exe` 不能被 Python `import`，应通过 HTTP 调用本地服务：
 
+全流程（GET + POST）：
+
+1. `GET /api/health` 检查服务可用
+2. `POST /api/crack` 生成目标站点 Cookie
+3. 带 Cookie 发起目标 `GET` 请求
+4. 带 Cookie 发起目标 `POST` 请求
+
 ```python
 import requests
 
