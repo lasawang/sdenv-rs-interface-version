@@ -211,6 +211,8 @@ python python/test_site.py
 import requests
 
 BASE = "http://127.0.0.1:3900"
+TARGET_GET = "https://www.suyinwealth.com/lccs/loadProductNew?page=2&rows=&prd_type=&status=0&client_groups=&interest_way=&min_money=&max_money=&prd_limit=&fund_risk="
+TARGET_POST = "https://example.com/api/demo"  # 换成你的真实 POST 接口
 
 health = requests.get(f"{BASE}/api/health", timeout=5).json()
 print("health:", health)
@@ -223,13 +225,35 @@ payload = {
     "verify": True,
 }
 
-resp = requests.post(
+crack_resp = requests.post(
     f"{BASE}/api/crack",
     json=payload,
     timeout=60,
+).json()
+
+cookie = crack_resp.get("cookies", "")
+if not cookie:
+    raise RuntimeError(f"failed to get cookie: {crack_resp}")
+
+common_headers = {
+    "Cookie": cookie,
+    "User-Agent": "Mozilla/5.0",
+    "Accept": "*/*",
+}
+
+# GET 用例
+get_resp = requests.get(TARGET_GET, headers=common_headers, timeout=60, verify=False)
+print("GET:", get_resp.status_code, get_resp.text[:120])
+
+# POST 用例（JSON）
+post_resp = requests.post(
+    TARGET_POST,
+    headers={**common_headers, "Content-Type": "application/json; charset=utf-8"},
+    json={"page": 1, "size": 20},
+    timeout=60,
+    verify=False,
 )
-result = resp.json()
-print(result.get("success"), len(result.get("cookies", "")))
+print("POST:", post_resp.status_code, post_resp.text[:120])
 ```
 
 安装 `requests`：
