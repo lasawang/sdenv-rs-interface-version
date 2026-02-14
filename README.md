@@ -208,10 +208,12 @@ python python/test_site.py
 `exe` 不能被 Python `import`，应通过 HTTP 调用本地服务：
 
 ```python
-import json
-import urllib.request
+import requests
 
 BASE = "http://127.0.0.1:3900"
+
+health = requests.get(f"{BASE}/api/health", timeout=5).json()
+print("health:", health)
 
 payload = {
     "mode": "remote",
@@ -221,17 +223,19 @@ payload = {
     "verify": True,
 }
 
-req = urllib.request.Request(
+resp = requests.post(
     f"{BASE}/api/crack",
-    data=json.dumps(payload).encode("utf-8"),
-    headers={"Content-Type": "application/json; charset=utf-8"},
-    method="POST",
+    json=payload,
+    timeout=60,
 )
-
-with urllib.request.urlopen(req, timeout=60) as resp:
-    result = json.loads(resp.read().decode("utf-8"))
-
+result = resp.json()
 print(result.get("success"), len(result.get("cookies", "")))
+```
+
+安装 `requests`：
+
+```bash
+pip install requests
 ```
 
 ## npm 使用
