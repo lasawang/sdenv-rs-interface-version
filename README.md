@@ -133,6 +133,70 @@ resp = client.request_with_cookie(
 print(resp.get('success'), resp.get('status_code'), resp.get('cookie_source'))
 ```
 
+#### GET 用例（获取网页/接口）
+
+```python
+from python.sdenv_client import SdenvClient
+
+client = SdenvClient(host='127.0.0.1', port=3901)
+resp = client.request_with_cookie(
+    cookie_url='https://www.suyinwealth.com',
+    request_url='https://www.suyinwealth.com/lccs/loadProductNew?page=2&rows=&prd_type=&status=0&client_groups=&interest_way=&min_money=&max_money=&prd_limit=&fund_risk=',
+    method='GET',
+    resource_mode='fast',
+    use_cookie_cache=True,
+    cookie_cache_ttl=20000,
+    retry_on_cookie_expired=True,
+    timeout=45000,
+    verify=False,
+)
+print(resp.get('success'), resp.get('status_code'), resp.get('cookie_source'))
+```
+
+#### POST 用例（JSON）
+
+```python
+from python.sdenv_client import SdenvClient
+
+client = SdenvClient(host='127.0.0.1', port=3901)
+resp = client.request_with_cookie(
+    cookie_url='https://example.com',
+    request_url='https://example.com/api/demo',
+    method='POST',
+    json_data={'page': 1, 'size': 20},
+    headers={'Content-Type': 'application/json; charset=utf-8'},
+    resource_mode='fast',
+    use_cookie_cache=True,
+    cookie_cache_ttl=20000,
+    retry_on_cookie_expired=True,
+    timeout=45000,
+    verify=False,
+)
+print(resp.get('success'), resp.get('status_code'), resp.get('cookie_source'))
+```
+
+#### POST 用例（Form）
+
+```python
+from python.sdenv_client import SdenvClient
+
+client = SdenvClient(host='127.0.0.1', port=3901)
+resp = client.request_with_cookie(
+    cookie_url='https://example.com',
+    request_url='https://example.com/api/form',
+    method='POST',
+    data={'keyword': 'test', 'page': 1},
+    headers={'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'},
+    resource_mode='fast',
+    use_cookie_cache=True,
+    cookie_cache_ttl=20000,
+    retry_on_cookie_expired=True,
+    timeout=45000,
+    verify=False,
+)
+print(resp.get('success'), resp.get('status_code'), resp.get('cookie_source'))
+```
+
 测试脚本：
 
 ```bash
